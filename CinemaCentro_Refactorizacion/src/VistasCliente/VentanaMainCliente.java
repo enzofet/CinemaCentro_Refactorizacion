@@ -1,0 +1,688 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package VistasCliente;
+
+import Controlador.AsientoDAO;
+import Controlador.FuncionDAO;
+import Controlador.PeliculaDAO;
+import Modelo.Asiento;
+import Modelo.Cliente;
+import Modelo.Funcion;
+import Modelo.Pelicula;
+import Modelo.Venta;
+import VistasAdministrativo.DialogAsientos;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+
+/**
+ *
+ * @author Enzo_2
+ */
+public class VentanaMainCliente extends javax.swing.JFrame {
+    
+    Cliente cliente;
+    
+    int idSala = 0;
+    double precioEntrada = 0;
+    boolean estadoExito;
+    ArrayList<Asiento> listaAsi = new ArrayList<>();
+    AsientoDAO maniAsi = new AsientoDAO();
+    DefaultListModel<String> modeloAsi = new DefaultListModel<>();
+
+    int idFun = 0;
+    private FuncionDAO maniFun = new FuncionDAO();
+    static String[] columnasFun = {"id_funcion", "Día", "Horario Inicio/Fin", "Sala", "3D", "Idioma", "Subtitulada", "Precio Entrada"};
+    static DefaultTableModel modeloFun = new DefaultTableModel(null, columnasFun) {
+        @Override
+        public boolean isCellEditable(int a, int b) {
+            return false;
+        }
+    };
+
+    int idPeli = 0;
+    private PeliculaDAO maniPeli = new PeliculaDAO();
+    static String[] cabeceraCartelera = {"id_pelicula", "Titulo", "Director", "Reparto", "Genero/s"};
+    static DefaultTableModel modeloPeli = new DefaultTableModel(null, cabeceraCartelera) {
+        @Override
+        public boolean isCellEditable(int a, int b) {
+            return false;
+        }
+    };
+
+    public VentanaMainCliente(Cliente cliente) {
+        initComponents();
+        this.cliente = cliente;
+        armarCabeceraPelicula(jTPeli);
+        armarCabeceraFuncion(jTFuncion);
+    }
+
+    private void tablaPeli() {
+        List<Pelicula> lista;
+        modeloPeli.setRowCount(0);
+        try {
+            lista = maniPeli.listarTodasPeliculas();
+            for (Pelicula peli : lista) {
+                modeloPeli.addRow(new Object[]{
+                    peli.getId_Pelicula(),
+                    peli.getTitulo(),
+                    peli.getDirector(),
+                    peli.getReparto(),
+                    peli.getGenero()
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String parsearBooleann(boolean estado) {
+        if (estado) {
+            return "Si";
+        }
+        return "No";
+    }
+
+    private void tablaFun() {
+
+        ArrayList<Funcion> listaFun;
+        modeloFun.setRowCount(0);
+        try {
+            listaFun = maniFun.listadoPorId(idPeli);
+            for (Funcion fun : listaFun) {
+                modeloFun.addRow(new Object[]{
+                    fun.getId_Funcion(),
+                    fun.getFecha_Funcion(),
+                    "Inicio: " + fun.getHora_Inicio() + " / Fin: " + fun.getHora_Fin(),
+                    fun.getNro_Sala(),
+                    parsearBooleann(fun.isEs3D()),
+                    fun.getIdioma(),
+                    parsearBooleann(fun.isSubtitulada()),
+                    fun.getPrecio_Entrada()
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Cabecera y relleno de tablas (pelicula y funcion)
+    private void armarCabeceraPelicula(JTable tabla) {
+
+        //Cabecera
+        tabla.setModel(modeloPeli);
+        TableColumnModel modeloColumnas = tabla.getColumnModel();
+        TableColumn columnID = modeloColumnas.getColumn(0);
+        columnID.setMinWidth(0);
+        columnID.setPreferredWidth(0);
+        columnID.setMaxWidth(0);
+        columnID.setResizable(false);
+
+        //relleno
+        tablaPeli();
+    }
+
+    private void armarCabeceraFuncion(JTable tabla) {
+        tabla.setModel(modeloFun);
+        TableColumnModel modeloColumnas = tabla.getColumnModel();
+        TableColumn columnID = modeloColumnas.getColumn(0);
+        columnID.setMinWidth(0);
+        columnID.setPreferredWidth(0);
+        columnID.setMaxWidth(0);
+        columnID.setResizable(false);
+
+        TableColumn columnHora = modeloColumnas.getColumn(2);
+        columnHora.setMinWidth(140);
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        pnlLogin = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jbPelicula = new javax.swing.JLabel();
+        jbFuncion = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTFuncion = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTPeli = new javax.swing.JTable();
+        txtCantidad = new javax.swing.JTextField();
+        jbCantidad = new javax.swing.JLabel();
+        jBButaca = new javax.swing.JButton();
+        jBComprar = new javax.swing.JButton();
+        jbSalir = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jListAsientos = new javax.swing.JList<>();
+        lblPrecio = new javax.swing.JLabel();
+        jBCancelarB = new javax.swing.JButton();
+        lblProxEstrenos = new javax.swing.JButton();
+        lblCinemaCentro = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        pnlLogin.setBackground(new java.awt.Color(102, 0, 0));
+
+        jLabel1.setFont(new java.awt.Font("Roboto Black", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("TAQUILLA ONLINE");
+
+        jbPelicula.setFont(new java.awt.Font("Roboto Black", 1, 18)); // NOI18N
+        jbPelicula.setForeground(new java.awt.Color(255, 255, 255));
+        jbPelicula.setText("Cartelera:");
+
+        jbFuncion.setFont(new java.awt.Font("Roboto Black", 1, 18)); // NOI18N
+        jbFuncion.setForeground(new java.awt.Color(255, 255, 255));
+        jbFuncion.setText("Función:");
+
+        jTFuncion.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jTFuncion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTFuncionMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTFuncion);
+
+        jTPeli.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jTPeli.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTPeliMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTPeli);
+
+        txtCantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCantidadKeyReleased(evt);
+            }
+        });
+
+        jbCantidad.setFont(new java.awt.Font("Roboto Black", 1, 18)); // NOI18N
+        jbCantidad.setForeground(new java.awt.Color(255, 255, 255));
+        jbCantidad.setText("Cantidad de boletos:");
+
+        jBButaca.setBackground(new java.awt.Color(70, 73, 75));
+        jBButaca.setFont(new java.awt.Font("Roboto Black", 1, 14)); // NOI18N
+        jBButaca.setForeground(new java.awt.Color(255, 255, 255));
+        jBButaca.setText("Seleccionar butacas");
+        jBButaca.setEnabled(false);
+        jBButaca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBButacaActionPerformed(evt);
+            }
+        });
+
+        jBComprar.setBackground(new java.awt.Color(70, 73, 75));
+        jBComprar.setFont(new java.awt.Font("Roboto Black", 1, 14)); // NOI18N
+        jBComprar.setForeground(new java.awt.Color(255, 255, 255));
+        jBComprar.setText("Comprar");
+        jBComprar.setEnabled(false);
+        jBComprar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBComprarActionPerformed(evt);
+            }
+        });
+
+        jbSalir.setBackground(new java.awt.Color(70, 73, 75));
+        jbSalir.setFont(new java.awt.Font("Roboto Black", 1, 14)); // NOI18N
+        jbSalir.setForeground(new java.awt.Color(255, 255, 255));
+        jbSalir.setText("Salir");
+        jbSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbSalirActionPerformed(evt);
+            }
+        });
+
+        jListAsientos.setEnabled(false);
+        jListAsientos.setOpaque(false);
+        jScrollPane3.setViewportView(jListAsientos);
+
+        lblPrecio.setFont(new java.awt.Font("Roboto Black", 1, 18)); // NOI18N
+        lblPrecio.setForeground(new java.awt.Color(255, 255, 255));
+        lblPrecio.setText("Precio Total:");
+
+        jBCancelarB.setBackground(new java.awt.Color(70, 73, 75));
+        jBCancelarB.setFont(new java.awt.Font("Roboto Black", 1, 14)); // NOI18N
+        jBCancelarB.setForeground(new java.awt.Color(255, 255, 255));
+        jBCancelarB.setText("Cancelar butacas");
+        jBCancelarB.setEnabled(false);
+        jBCancelarB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCancelarBActionPerformed(evt);
+            }
+        });
+
+        lblProxEstrenos.setBackground(new java.awt.Color(70, 73, 75));
+        lblProxEstrenos.setFont(new java.awt.Font("Roboto Black", 1, 14)); // NOI18N
+        lblProxEstrenos.setForeground(new java.awt.Color(255, 255, 255));
+        lblProxEstrenos.setText("Ver próximos estrenos");
+        lblProxEstrenos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lblProxEstrenosActionPerformed(evt);
+            }
+        });
+
+        lblCinemaCentro.setFont(new java.awt.Font("Roboto Black", 1, 36)); // NOI18N
+        lblCinemaCentro.setForeground(new java.awt.Color(255, 255, 255));
+        lblCinemaCentro.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCinemaCentro.setText("CinemaCentro");
+
+        javax.swing.GroupLayout pnlLoginLayout = new javax.swing.GroupLayout(pnlLogin);
+        pnlLogin.setLayout(pnlLoginLayout);
+        pnlLoginLayout.setHorizontalGroup(
+            pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlLoginLayout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jbFuncion)
+                    .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlLoginLayout.createSequentialGroup()
+                            .addGap(251, 251, 251)
+                            .addComponent(jLabel1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblCinemaCentro))
+                        .addGroup(pnlLoginLayout.createSequentialGroup()
+                            .addComponent(jbPelicula)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblProxEstrenos))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 757, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlLoginLayout.createSequentialGroup()
+                            .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lblPrecio)
+                                .addGroup(pnlLoginLayout.createSequentialGroup()
+                                    .addComponent(jbCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(30, 30, 30)
+                            .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jBButaca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jBCancelarB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGap(18, 18, 18)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jbSalir, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jBComprar, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 757, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(12, Short.MAX_VALUE))
+        );
+        pnlLoginLayout.setVerticalGroup(
+            pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlLoginLayout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(lblCinemaCentro))
+                .addGap(24, 24, 24)
+                .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblProxEstrenos)
+                    .addComponent(jbPelicula))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jbFuncion)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24)
+                .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlLoginLayout.createSequentialGroup()
+                        .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jbCantidad)
+                            .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblPrecio))
+                    .addGroup(pnlLoginLayout.createSequentialGroup()
+                        .addComponent(jBComprar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbSalir))
+                    .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlLoginLayout.createSequentialGroup()
+                            .addComponent(jBButaca)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jBCancelarB))))
+                .addContainerGap(42, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnlLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnlLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jBButacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBButacaActionPerformed
+
+        try {
+
+            int cant = Integer.parseInt(txtCantidad.getText());
+            if (cant <= 0) {
+                JOptionPane.showMessageDialog(this, "Ingrese una cantidad mayor a 0.");
+                return;
+            }
+
+            JFrame padre = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+            for (int i = 0; i < cant; i++) {
+                DialogAsientos ventanaAsientos = new DialogAsientos(padre, true, idSala);
+                ventanaAsientos.setVisible(true);
+                Asiento asientoSelec = ventanaAsientos.getAsientoSeleccionado();
+
+                if (asientoSelec != null) {
+                    modeloAsi.addElement(String.valueOf(asientoSelec.getFila_asiento()) + "-" + asientoSelec.getNumero_asiento());
+                    listaAsi.add(asientoSelec);
+
+                    jListAsientos.setOpaque(true);
+                    jListAsientos.setModel(modeloAsi);
+                    jBComprar.setEnabled(true);
+                    jBCancelarB.setEnabled(true);
+
+                } else {
+                    jBButaca.setEnabled(true);
+                    jBCancelarB.setEnabled(false);
+                    JOptionPane.showMessageDialog(this, "Selección de boletos cancelada.");
+
+                    for (Asiento a : listaAsi) {
+                        try {
+                            maniAsi.darAlta(a.getId_asiento());
+                        } catch (Exception ex) {
+                            System.out.println("Error al dar de alta nuevamente.");
+                        }
+                    }
+
+                    modeloAsi.clear();
+                    listaAsi.clear();
+                    break;
+                }
+                jBButaca.setEnabled(false);
+            }
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Ingrese un número válido de boletos.");
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un error: " + ex.getMessage());
+        }
+    }//GEN-LAST:event_jBButacaActionPerformed
+
+    private void jbSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSalirActionPerformed
+        if (listaAsi.isEmpty()) {
+            this.dispose();
+        } else {
+            Object[] opciones = {"Si", "No"};
+            int eleccion = JOptionPane.showOptionDialog(
+                    null,
+                    "Selección de función en curso.\n¿Seguro que desea salir? ",
+                    "",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    opciones,
+                    null);
+
+            if (eleccion == 0) {
+                modeloAsi.clear();
+                for (Asiento a : listaAsi) {
+                    try {
+                        maniAsi.darAlta(a.getId_asiento());
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(this, e.getMessage());
+                    }
+                }
+                this.dispose();
+            }
+        }
+
+
+    }//GEN-LAST:event_jbSalirActionPerformed
+
+    private void jTPeliMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTPeliMouseClicked
+
+        int filaSelec = jTPeli.getSelectedRow();
+        if (filaSelec > -1) {
+
+            idPeli = (int) jTPeli.getValueAt(filaSelec, 0);
+
+            tablaFun();
+        }
+    }//GEN-LAST:event_jTPeliMouseClicked
+
+    private void jTFuncionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTFuncionMouseClicked
+        
+        txtCantidad.setText("");
+        int filaSelec = jTFuncion.getSelectedRow();
+        if (filaSelec > -1) {
+
+            idSala = (int) jTFuncion.getValueAt(filaSelec, 3);
+            idFun = (int) jTFuncion.getValueAt(filaSelec, 0);
+
+            precioEntrada = (double) jTFuncion.getValueAt(filaSelec, 7);
+
+            try {
+                int cantidad = Integer.parseInt(txtCantidad.getText());
+                precioTotal = cantidad * precioEntrada;
+            } catch (NumberFormatException e) {
+            }
+            
+            
+        }
+    }//GEN-LAST:event_jTFuncionMouseClicked
+
+    private double precioTotal;
+
+    private void txtCantidadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadKeyReleased
+        // TODO add your handling code here:
+        try {
+            int cantidad = Integer.parseInt(txtCantidad.getText());
+            if (precioEntrada > 0) {
+                precioTotal = cantidad * precioEntrada;
+                lblPrecio.setText("Precio Total: $ " + precioTotal);
+                jBButaca.setEnabled(true);
+            } else {
+                lblPrecio.setText("Precio Total: Seleccione la función.");
+                jBButaca.setEnabled(false);
+            }
+        } catch (NumberFormatException e) {
+            lblPrecio.setText("Precio Total:");
+            jBButaca.setEnabled(false);
+        } catch (Exception a) {
+            JOptionPane.showMessageDialog(this, a.getMessage());
+        }
+    }//GEN-LAST:event_txtCantidadKeyReleased
+
+    private void jBCancelarBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarBActionPerformed
+        // TODO add your handling code here:
+        listaAsi.clear();
+        modeloAsi.clear();
+        jListAsientos.setModel(modeloAsi);
+
+        for (Asiento a : listaAsi) {
+            try {
+                maniAsi.darAlta(a.getId_asiento());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
+        }
+        txtCantidad.setText("");
+        jBButaca.setEnabled(false);
+        jBCancelarB.setEnabled(false);
+        jBComprar.setEnabled(false);
+        jListAsientos.setOpaque(false);
+    }//GEN-LAST:event_jBCancelarBActionPerformed
+
+    private void jBComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBComprarActionPerformed
+        // TODO add your handling code here:
+        
+        int id_cliente = cliente.getId_cliente();
+        Venta ventaOnline = new Venta();
+        ventaOnline.setId_Cliente(id_cliente);
+        ventaOnline.setMedio_Pago("debito");
+        ventaOnline.setCantidad_Entradas(Integer.parseInt(txtCantidad.getText()));
+        ventaOnline.setImporte_Total(precioEntrada);
+        ventaOnline.setMedio_Compra("Online");
+        ventaOnline.setFecha_Venta(LocalDate.now());
+
+        try {
+            JFrame padre = (JFrame) SwingUtilities.getWindowAncestor(this);
+            DialogCompra ventanaCompra = new DialogCompra(padre, true, listaAsi, ventaOnline, "debito", idFun, "online");
+            ventanaCompra.setVisible(true);
+            
+            estadoExito = ventanaCompra.isEstado();
+            
+            if(!estadoExito){
+                for(Asiento a : listaAsi){
+                    try {
+                        maniAsi.darAlta(a.getId_asiento());
+                    } catch(Exception e){
+                        JOptionPane.showMessageDialog(this, e.getMessage());
+                    }
+                }
+                listaAsi.clear();
+                jTFuncion.clearSelection();
+                jTPeli.clearSelection();
+            }
+            
+        } catch (Exception ex) {
+            Logger.getLogger(VentanaMainCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        limpiarCampos();
+    }//GEN-LAST:event_jBComprarActionPerformed
+
+    private void lblProxEstrenosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblProxEstrenosActionPerformed
+
+        JFrame padre = (JFrame) SwingUtilities.getWindowAncestor(this);
+        DialogProxEstrenos ventanaEstrenos = new DialogProxEstrenos(padre, true);
+        ventanaEstrenos.setVisible(true);
+    }//GEN-LAST:event_lblProxEstrenosActionPerformed
+
+    private void limpiarCampos() {
+        txtCantidad.setText("");
+    lblPrecio.setText("Precio Total:");
+    jTPeli.clearSelection();
+    jTFuncion.clearSelection();
+    modeloAsi.clear();
+    jListAsientos.setModel(modeloAsi);
+    jListAsientos.setOpaque(false);
+    listaAsi.clear();
+    precioTotal = 0;
+    precioEntrada = 0;
+    idPeli = 0;
+    idSala = 0;
+    idFun = 0;
+    jBButaca.setEnabled(false);
+    jBCancelarB.setEnabled(false);
+    jBComprar.setEnabled(false);
+    tablaFun();
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(VentanaMainCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(VentanaMainCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(VentanaMainCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(VentanaMainCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                Cliente cliente = null;
+                new VentanaMainCliente(cliente).setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBButaca;
+    private javax.swing.JButton jBCancelarB;
+    private javax.swing.JButton jBComprar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JList<String> jListAsientos;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable jTFuncion;
+    private javax.swing.JTable jTPeli;
+    private javax.swing.JLabel jbCantidad;
+    private javax.swing.JLabel jbFuncion;
+    private javax.swing.JLabel jbPelicula;
+    private javax.swing.JButton jbSalir;
+    private javax.swing.JLabel lblCinemaCentro;
+    private javax.swing.JLabel lblPrecio;
+    private javax.swing.JButton lblProxEstrenos;
+    private javax.swing.JPanel pnlLogin;
+    private javax.swing.JTextField txtCantidad;
+    // End of variables declaration//GEN-END:variables
+}
