@@ -24,7 +24,6 @@ import java.util.List;
 public class DetalleTicketDAO {
     
     FuncionDAO maniFuncion = new FuncionDAO();
-    AsientoDAO maniAsiento = new AsientoDAO();
     VentaDAO maniVenta = new VentaDAO();
     
 

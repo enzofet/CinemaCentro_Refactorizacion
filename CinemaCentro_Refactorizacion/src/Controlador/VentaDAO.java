@@ -12,16 +12,19 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-import org.mariadb.jdbc.Statement;
+
 
 /**
  *
  * @author Gonzalo Achucarro
  */
 public class VentaDAO {
+    
+    ClienteDAO maniCliente = new ClienteDAO();
 
     public int registrarVentaTaquilla(Venta venta) throws Exception {
         String sql = "INSERT INTO venta(id_cliente, medio_pago, cantidad_entradas, importe_total,"
@@ -35,11 +38,11 @@ public class VentaDAO {
             } else {
                 ps.setInt(1, venta.getCliente().getId_cliente());
             }
-            ps.setString(2, venta.getMedio_Pago());
-            ps.setInt(3, venta.getCantidad_Entradas());
-            ps.setDouble(4, venta.getImporte_Total());
-            ps.setString(5, venta.getMedio_Compra());
-            ps.setDate(6, Date.valueOf(venta.getFecha_Venta()));
+            ps.setString(2, venta.getMedio_pago());
+            ps.setInt(3, venta.getCantidad_entradas());
+            ps.setDouble(4, venta.getImporte_total());
+            ps.setString(5, venta.getMedio_compra());
+            ps.setDate(6, Date.valueOf(venta.getFecha_venta()));
             int fila = ps.executeUpdate();
 
             if (fila == 0) {
@@ -73,10 +76,10 @@ public class VentaDAO {
             } else {
                 ps.setInt(1, venta.getCliente().getId_cliente());
             }
-            ps.setString(2, venta.getMedio_Pago());
-            ps.setInt(3, venta.getCantidad_Entradas());
-            ps.setDouble(4, venta.getImporte_Total());
-            ps.setString(5, venta.getMedio_Compra());
+            ps.setString(2, venta.getMedio_pago());
+            ps.setInt(3, venta.getCantidad_entradas());
+            ps.setDouble(4, venta.getImporte_total());
+            ps.setString(5, venta.getMedio_compra());
 
             if (venta.getToken() == null) {
                 ps.setNull(6, java.sql.Types.INTEGER);
@@ -84,7 +87,7 @@ public class VentaDAO {
                 ps.setInt(6, venta.getToken());
             }
 
-            ps.setDate(7, java.sql.Date.valueOf(venta.getFecha_Venta()));
+            ps.setDate(7, java.sql.Date.valueOf(venta.getFecha_venta()));
 
             int fila = ps.executeUpdate();
 
@@ -114,16 +117,16 @@ public class VentaDAO {
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, venta.getCliente().getId_cliente());
-            ps.setString(2, venta.getMedio_Pago());
-            ps.setInt(3, venta.getCantidad_Entradas());
-            ps.setDouble(4, venta.getImporte_Total());
-            ps.setString(5, venta.getMedio_Compra());
+            ps.setString(2, venta.getMedio_pago());
+            ps.setInt(3, venta.getCantidad_entradas());
+            ps.setDouble(4, venta.getImporte_total());
+            ps.setString(5, venta.getMedio_compra());
             if (venta.getToken() == null) {
                 ps.setNull(6, java.sql.Types.INTEGER);
             } else {
                 ps.setInt(6, venta.getToken());
             }
-            ps.setDate(7, Date.valueOf(venta.getFecha_Venta()));
+            ps.setDate(7, Date.valueOf(venta.getFecha_venta()));
 
             int fila = ps.executeUpdate();
             if (fila == 0) {
@@ -199,7 +202,7 @@ public class VentaDAO {
                 while (rs.next()) {
                     venta = new Venta();
                     venta.setId_venta(rs.getInt("id_venta"));
-                    venta.setCliente(rs.getInt("id_cliente"));
+                    venta.setCliente(maniCliente.buscarClientePorId(rs.getInt("id_cliente")));
                     venta.setMedio_pago(rs.getString("medio_pago"));
                     venta.setCantidad_entradas(rs.getInt("cantidad_entradas"));
                     venta.setImporte_total(rs.getDouble("importe_total"));
@@ -215,14 +218,26 @@ public class VentaDAO {
         return listaVenta;
     }
     
-    public Venta buscarPorId(int id){
+    public Venta buscarPorId(int id) throws Exception{
         String sql = "SELECT * FROM venta WHERE id_venta = ?";
         Connection con = ConexionBD.getConnection();
+        Venta venta = null;
         
-        try (PreparedStatement){
+        try (PreparedStatement ps = con.prepareStatement(sql)){
+            ps.setInt(1, id);
+            try(ResultSet rs = ps.executeQuery()){
+                venta = new Venta();
+                venta.setId_venta(rs.getInt("id_venta"));
+                    venta.setCliente(maniCliente.buscarClientePorId(rs.getInt("id_cliente")));
+                    venta.setMedio_pago(rs.getString("medio_pago"));
+                    venta.setCantidad_entradas(rs.getInt("cantidad_entradas"));
+                    venta.setImporte_total(rs.getDouble("importe_total"));
+                    venta.setToken(rs.getInt("token"));
+            }
           }catch(SQLException e){
-          
+              throw new Exception("No se ha encontrado la venta asignada.");
           }
+        return venta;
     }
 
 }

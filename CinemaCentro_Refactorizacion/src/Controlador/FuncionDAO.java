@@ -115,8 +115,8 @@ public class FuncionDAO {
                 if (rs.next()) {
                     fun = new Funcion();
                     fun.setId_Funcion(rs.getInt("id_funcion"));
-                    fun.setId_pelicula(rs.getInt("id_pelicula"));
-                    fun.setNro_Sala(rs.getInt("nro_sala"));
+                    fun.setPelicula(maniPelicula.buscarPorId(rs.getInt("id_pelicula")));
+                    fun.setSala(maniSala.buscarSala(rs.getInt("nro_sala")));
                     fun.setIdioma(rs.getString("idioma"));
                     fun.setEs3D(rs.getBoolean("es3D"));
                     fun.setHora_Inicio(rs.getTime("hora_inicio"));
@@ -147,8 +147,8 @@ public class FuncionDAO {
                 while (rs.next()) {
                     fun = new Funcion();
                     fun.setId_Funcion(rs.getInt("id_funcion"));
-                    fun.setId_pelicula(rs.getInt("id_pelicula"));
-                    fun.setNro_Sala(rs.getInt("nro_sala"));
+                    fun.setPelicula(maniPelicula.buscarPorId(rs.getInt("id_pelicula")));
+                    fun.setSala(maniSala.buscarSala(rs.getInt("nro_sala")));
                     fun.setIdioma(rs.getString("idioma"));
                     fun.setEs3D(rs.getBoolean("es3D"));
                     fun.setHora_Inicio(rs.getTime("hora_inicio"));
@@ -210,8 +210,8 @@ public class FuncionDAO {
                 while (rs.next()) {
                     Funcion fun = new Funcion();
                     fun.setId_Funcion(rs.getInt("id_funcion"));
-                    fun.setId_pelicula(rs.getInt("id_pelicula"));
-                    fun.setNro_Sala(rs.getInt("nro_sala"));
+                    fun.setPelicula(maniPelicula.buscarPorId(rs.getInt("id_pelicula")));
+                    fun.setSala(maniSala.buscarSala(rs.getInt("nro_sala")));
                     fun.setIdioma(rs.getString("idioma"));
                     fun.setEs3D(rs.getBoolean("es3D"));
                     fun.setHora_Inicio(rs.getTime("hora_inicio"));
@@ -232,8 +232,8 @@ public class FuncionDAO {
 
     public Funcion buscarFuncion(int id_Pelicula, int nro_Sala, Time Hora_Inicio) throws Exception {
         for (Funcion f : listarFunciones()) {
-            if (f.getId_pelicula() == id_Pelicula
-                    && f.getNro_Sala() == nro_Sala
+            if (f.getPelicula().getId_Pelicula() == id_Pelicula
+                    && f.getSala().getNro_Sala() == nro_Sala
                     && f.getHora_Inicio().equals(Hora_Inicio)) {
                 return f;
             }
