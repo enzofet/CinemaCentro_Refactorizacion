@@ -43,8 +43,9 @@ public class DialogAsientos extends javax.swing.JDialog {
     char fila = '\u0000';
     String asiento;
     Asiento asientoS = null;
+    List<Asiento> listaAsientosS;
 
-    public DialogAsientos(java.awt.Frame parent, boolean modal, int nro_sala, int id_funcion) {
+    public DialogAsientos(java.awt.Frame parent, boolean modal, int nro_sala, int id_funcion, List<Asiento> listaAsientosS) {
         super(parent, modal);
         initComponents();
         this.nro_sala = nro_sala;
@@ -54,11 +55,12 @@ public class DialogAsientos extends javax.swing.JDialog {
         try {
             this.listaAsientos = armarSala(nro_sala);
             this.tickets = maniTicket.listarTicketsPorFuncion(id_funcion);
+            this.listaAsientosS = listaAsientosS;
         } catch (Exception ex) {
             ex.printStackTrace();
 
         }
-        rellenarTabla(listaAsientos, tickets);
+        rellenarTabla(listaAsientos, tickets, listaAsientosS);
         tblAsientos.setCellSelectionEnabled(true);
         tblAsientos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         agregarListener(tblAsientos);
@@ -365,12 +367,15 @@ public class DialogAsientos extends javax.swing.JDialog {
         }
     }
 
-    public void rellenarTabla(List<Asiento> lista, List<DetalleTicket> listaT) {
+    public void rellenarTabla(List<Asiento> lista, List<DetalleTicket> listaT, List<Asiento> seleccionados) {
         DefaultTableModel modelo = (DefaultTableModel) tblAsientos.getModel();
         try {
             Set<String> asientosOcup = new HashSet<>();
             for (DetalleTicket dt : listaT) {
                 asientosOcup.add(dt.getAsiento());
+            }
+            for(Asiento a : seleccionados){
+                asientosOcup.add(a.getAsiento());
             }
 
             int contador = 0;
@@ -497,8 +502,9 @@ public class DialogAsientos extends javax.swing.JDialog {
                 int nro = 0;
                 int nro1 = 0;
                 DialogAsientos dialog = null;
+                List<Asiento> lista = null;
                 try {
-                    dialog = new DialogAsientos(new javax.swing.JFrame(), true, nro, nro1);
+                    dialog = new DialogAsientos(new javax.swing.JFrame(), true, nro, nro1, lista);
                 } catch (Exception ex) {
                     Logger.getLogger(DialogAsientos.class.getName()).log(Level.SEVERE, null, ex);
                 }

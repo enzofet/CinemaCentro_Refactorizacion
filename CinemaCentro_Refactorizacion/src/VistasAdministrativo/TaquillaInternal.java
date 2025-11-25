@@ -545,7 +545,7 @@ public class TaquillaInternal extends javax.swing.JInternalFrame {
             listaAsientos = new ArrayList<>();
             JFrame padre = (JFrame) SwingUtilities.getWindowAncestor(this);
             for (int i = 0; i < cantidad; i++) {
-                DialogAsientos ventanaAsientos = new DialogAsientos(padre, true, nro_sala, id_funcion);
+                DialogAsientos ventanaAsientos = new DialogAsientos(padre, true, nro_sala, id_funcion, listaAsientos);
                 ventanaAsientos.setVisible(true);
                 Asiento asientoS = ventanaAsientos.getAsientoSeleccionado();
 
