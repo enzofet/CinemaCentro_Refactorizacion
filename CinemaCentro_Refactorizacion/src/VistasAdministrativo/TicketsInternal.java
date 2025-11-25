@@ -16,6 +16,7 @@ import Modelo.Funcion;
 import Modelo.TicketDato;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -585,7 +586,8 @@ public class TicketsInternal extends javax.swing.JInternalFrame {
             if (estadoAccion) {
                 int idFuncionCambiada = ventanaFuncion.getIdFuncion();
                 Funcion fun = maniFuncion.buscarFuncionPorId(idFuncionCambiada);
-                DialogAsientos ventanaAsientos = new DialogAsientos(padre, true, fun.getSala().getNro_Sala(), fun.getId_Funcion(), null);
+                List<Asiento> lista = new ArrayList<>();
+                DialogAsientos ventanaAsientos = new DialogAsientos(padre, true, fun.getSala().getNro_Sala(), fun.getId_Funcion(), lista);
                 ventanaAsientos.setVisible(true);
                 Asiento asientoNuevo = ventanaAsientos.getAsientoSeleccionado();
 

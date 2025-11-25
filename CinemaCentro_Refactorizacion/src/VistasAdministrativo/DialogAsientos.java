@@ -412,7 +412,7 @@ public class DialogAsientos extends javax.swing.JDialog {
                 break;
             }
             String fila = listaFila[i];
-            for (int j = 1; i <= asientosPorFila; j++) {
+            for (int j = 1; j <= asientosPorFila; j++) {
                 if (asientosCreados >= salaSeleccionada.getCapacidad()) {
                     break;
                 }
