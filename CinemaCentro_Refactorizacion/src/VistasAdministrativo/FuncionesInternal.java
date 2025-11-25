@@ -538,8 +538,8 @@ public class FuncionesInternal extends javax.swing.JInternalFrame {
             List<Funcion> funciones = funcionDAO.listarFunciones();
 
             for (Funcion funcion : funciones) {
-                String nombrePelicula = obtenerNombrePelicula(funcion.getId_pelicula());
-                String datosSala = String.valueOf(funcion.getNro_Sala());
+                String nombrePelicula = obtenerNombrePelicula(funcion.getPelicula().getId_Pelicula());
+                String datosSala = String.valueOf(funcion.getSala().getNro_Sala());
                 String subtituladaStr = funcion.isSubtitulada()
                         ? (funcion.getIdioma().equals("Español") ? "Inglés" : "Español") : "No";
                 String tipo = funcion.isEs3D() ? "3D" : "2D";
@@ -583,11 +583,11 @@ public class FuncionesInternal extends javax.swing.JInternalFrame {
         try {
             List<Funcion> funciones = funcionDAO.listarFunciones();
             for (Funcion funcion : funciones) {
-                if (funcion.getNro_Sala() == nroSala
+                if (funcion.getSala().getNro_Sala() == nroSala
                         && funcion.getFecha_Funcion().toString().equals(fecha)) {
                     String horaFuncion = funcion.getHora_Inicio().toString().substring(0, 5);
                     if (horaFuncion.equals(horaInicio)) {
-                        String nombreFuncionPelicula = obtenerNombrePelicula(funcion.getId_pelicula());
+                        String nombreFuncionPelicula = obtenerNombrePelicula(funcion.getPelicula().getId_Pelicula());
                         if (nombreFuncionPelicula.equals(nombrePelicula)) {
                             return funcion.getId_Funcion();
                         }
