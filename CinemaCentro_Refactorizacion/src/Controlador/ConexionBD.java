@@ -17,7 +17,7 @@ public class ConexionBD {
 
     private static Connection conn = null;
     private static final String DRIVER = "org.mariadb.jdbc.Driver";
-    private static final String URL = "jdbc:mariadb://localhost/cinemacentro";
+    private static final String URL = "jdbc:mariadb://localhost/gp5_cinemacentro";
     private static final String USUARIO = "root";
     private static final String PASSWORD = "";
 

@@ -5,7 +5,7 @@
  */
 package Controlador;
 
-import Modelo.Asiento;
+
 import Modelo.DetalleTicket;
 import Modelo.TicketDato;
 import java.sql.Connection;
@@ -105,7 +105,7 @@ public class DetalleTicketDAO {
     public ArrayList<DetalleTicket> listarTicketsPorVenta(int id_venta) throws Exception {
         String sql = "SELECT * FROM detalleticket WHERE id_venta = ?";
         Connection con = ConexionBD.getConnection();
-        ArrayList<DetalleTicket> listaTickets = null;
+        ArrayList<DetalleTicket> listaTickets = new ArrayList<>();
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id_venta);
             try (ResultSet rs = ps.executeQuery()) {
@@ -124,6 +124,32 @@ public class DetalleTicketDAO {
             e.printStackTrace();
             throw new Exception("Error relacionado a la base de datos.");
         }
+        return listaTickets;
+    }
+    
+    public List<DetalleTicket> listarTicketsPorFuncion(int id_funcion) throws Exception{
+        String sql = "SELECT * FROM detalleticket WHERE id_funcion = ?";
+        Connection con = ConexionBD.getConnection();
+        ArrayList<DetalleTicket> listaTickets = new ArrayList<>();
+        try(PreparedStatement ps = con.prepareStatement(sql)){
+            ps.setInt(1, id_funcion);
+            try(ResultSet rs = ps.executeQuery()){
+                while(rs.next()){
+                    DetalleTicket ticket = new DetalleTicket();
+                    ticket.setId_ticket(rs.getInt("id_ticket"));
+                    ticket.setFuncion(maniFuncion.buscarFuncionPorId(rs.getInt("id_funcion")));
+                    ticket.setAsiento(rs.getString("asiento"));
+                    ticket.setVenta(maniVenta.buscarPorId(rs.getInt("id_venta")));
+                    ticket.setFecha_emision(rs.getDate("fecha_emision").toLocalDate());
+                    ticket.setEstado(rs.getBoolean("estado"));
+                    listaTickets.add(ticket);
+                    }
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+            throw new Exception("Error relacionado a la base de datos.");
+        }
+        
         return listaTickets;
     }
 

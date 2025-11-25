@@ -5,7 +5,7 @@
  */
 package VistasAdministrativo;
 
-import Controlador.AsientoDAO;
+
 import Controlador.ClienteDAO;
 import Controlador.DetalleTicketDAO;
 import Controlador.FuncionDAO;
@@ -44,7 +44,6 @@ public class TicketsInternal extends javax.swing.JInternalFrame {
     DetalleTicketDAO maniTickets = new DetalleTicketDAO();
     FuncionDAO maniFuncion = new FuncionDAO();
     ClienteDAO maniCliente = new ClienteDAO();
-    AsientoDAO maniAsiento = new AsientoDAO();
 
     int idTicket = -1;
 
@@ -55,7 +54,6 @@ public class TicketsInternal extends javax.swing.JInternalFrame {
 
         try {
             listaDatosTickets = maniTickets.listarDatosTickets();
-
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
@@ -585,10 +583,9 @@ public class TicketsInternal extends javax.swing.JInternalFrame {
             boolean estadoAccion = ventanaFuncion.isEstadoExito();
 
             if (estadoAccion) {
-
                 int idFuncionCambiada = ventanaFuncion.getIdFuncion();
                 Funcion fun = maniFuncion.buscarFuncionPorId(idFuncionCambiada);
-                DialogAsientos ventanaAsientos = new DialogAsientos(padre, true, fun.getNro_Sala());
+                DialogAsientos ventanaAsientos = new DialogAsientos(padre, true, fun.getSala().getNro_Sala(), fun.getId_Funcion());
                 ventanaAsientos.setVisible(true);
                 Asiento asientoNuevo = ventanaAsientos.getAsientoSeleccionado();
 

@@ -5,7 +5,7 @@
  */
 package VistasAdministrativo;
 
-import Controlador.AsientoDAO;
+
 import Controlador.FuncionDAO;
 import Controlador.PeliculaDAO;
 import Modelo.Asiento;
@@ -40,7 +40,6 @@ public class TaquillaInternal extends javax.swing.JInternalFrame {
      */
     PeliculaDAO maniPeli = new PeliculaDAO();
     FuncionDAO maniFuncion = new FuncionDAO();
-    AsientoDAO maniAsi = new AsientoDAO();
     String[] cabeceraCartelera = {"id_pelicula", "Titulo", "Director", "Reparto", "Pais de origen", "Genero/s"};
     String[] cabeceraFunciones = {"id_funcion", "Número de sala", "Idioma", "3D", "Hora de inicio", "Hora finalización", "Precio de entrada",
         "Fecha de función", "Subtitulada"};
@@ -546,12 +545,12 @@ public class TaquillaInternal extends javax.swing.JInternalFrame {
             listaAsientos = new ArrayList<>();
             JFrame padre = (JFrame) SwingUtilities.getWindowAncestor(this);
             for (int i = 0; i < cantidad; i++) {
-                DialogAsientos ventanaAsientos = new DialogAsientos(padre, true, nro_sala);
+                DialogAsientos ventanaAsientos = new DialogAsientos(padre, true, nro_sala, id_funcion);
                 ventanaAsientos.setVisible(true);
                 Asiento asientoS = ventanaAsientos.getAsientoSeleccionado();
 
                 if (asientoS != null) {
-                    modeloLista.addElement(String.valueOf(asientoS.getFila_asiento()) + "-" + asientoS.getNumero_asiento());
+                    modeloLista.addElement(String.valueOf(asientoS.getAsiento()));
                     listaAsientos.add(asientoS);
 
                     listAsientosS.setOpaque(true);
@@ -564,14 +563,6 @@ public class TaquillaInternal extends javax.swing.JInternalFrame {
                     btnConfirmacion.setEnabled(true);
                     btnCancelarAsientos.setEnabled(false);
                     JOptionPane.showMessageDialog(this, "Cancelada selección de boletos");
-
-                    for (Asiento a : listaAsientos) {
-                        try {
-                            maniAsi.darAlta(a.getId_asiento());
-                        } catch (Exception e) {
-                            System.out.println("Error al dar de alta nuevamente.");
-                        }
-                    }
                     modeloLista.clear();
                     listaAsientos.clear();
                     break;
@@ -589,13 +580,6 @@ public class TaquillaInternal extends javax.swing.JInternalFrame {
 
     private void btnCancelarAsientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarAsientosActionPerformed
         modeloLista.clear();
-        for (Asiento a : listaAsientos) {
-            try {
-                maniAsi.darAlta(a.getId_asiento());
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, e.getMessage());
-            }
-        }
         cmbMedioPago.setSelectedIndex(0);
         txtCantidadBoletos.setText("");
         btnConfirmacion.setEnabled(false);
@@ -622,11 +606,11 @@ public class TaquillaInternal extends javax.swing.JInternalFrame {
 
     private void btnRealizarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRealizarCompraActionPerformed
         Venta venta = new Venta();
-        venta.setMedio_Pago(mediodePago());
-        venta.setCantidad_Entradas(Integer.parseInt(txtCantidadBoletos.getText()));
-        venta.setImporte_Total(precioTotal);
-        venta.setMedio_Compra("Taquilla");
-        venta.setFecha_Venta(LocalDate.now());
+        venta.setMedio_pago(mediodePago());
+        venta.setCantidad_entradas(Integer.parseInt(txtCantidadBoletos.getText()));
+        venta.setImporte_total(precioTotal);
+        venta.setMedio_compra("Taquilla");
+        venta.setFecha_venta(LocalDate.now());
 
         try {
             JFrame padre = (JFrame) SwingUtilities.getWindowAncestor(this);
@@ -635,13 +619,6 @@ public class TaquillaInternal extends javax.swing.JInternalFrame {
             estadoExito = ventanaCompra.isEstado();
 
             if (!estadoExito) {
-                for (Asiento a : listaAsientos) {
-                    try {
-                        maniAsi.darBaja(a.getId_asiento());
-                    } catch (Exception e) {
-                        JOptionPane.showMessageDialog(this, e.getMessage());
-                    }
-                }
                 tblCartelera.clearSelection();
                 tblFunciones.clearSelection();
                 listaAsientos.clear();
@@ -664,13 +641,6 @@ public class TaquillaInternal extends javax.swing.JInternalFrame {
             int eleccion = JOptionPane.showConfirmDialog(this, "Selección de butacas en curso. ¿Esta seguro que desea salir? Se perderan los datos ingresados.","Error", YES_NO_OPTION);
             if(eleccion == 0){
                 modeloLista.clear();
-                for(Asiento a : listaAsientos){
-                    try{
-                        maniAsi.darAlta(a.getId_asiento());
-                    }catch(Exception e){
-                        JOptionPane.showMessageDialog(this, e.getMessage());
-                    }
-                }
                 this.dispose();
             }
         }
@@ -731,7 +701,7 @@ public class TaquillaInternal extends javax.swing.JInternalFrame {
 
             for (Funcion f : listaFuncionPorPelicula) {
                 modelo.addRow(new Object[]{f.getId_Funcion(),
-                    f.getNro_Sala(),
+                    f.getSala().getNro_Sala(),
                     f.getIdioma(),
                     parsearBoolean(f.isEs3D()),
                     f.getHora_Inicio(),

@@ -5,7 +5,7 @@
  */
 package Controlador;
 
-import Modelo.Cliente;
+
 import Modelo.Venta;
 import java.sql.Connection;
 import java.sql.Date;
