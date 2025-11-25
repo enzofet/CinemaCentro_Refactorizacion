@@ -5,7 +5,7 @@
  */
 package VistasCliente;
 
-import Controlador.AsientoDAO;
+
 import Controlador.ClienteDAO;
 import Controlador.DetalleTicketDAO;
 import Controlador.FuncionDAO;
@@ -78,7 +78,7 @@ public class DialogCompra extends javax.swing.JDialog {
         this.venta.setToken(this.token);
 
         this.funcion = maniFuncion.buscarFuncionPorId(id_funcion);
-        this.peli = maniPeli.buscarPorId(funcion.getId_pelicula());
+        this.peli = maniPeli.buscarPorId(funcion.getPelicula().getId_Pelicula());
         this.medioPago = medio_pago;
         this.medioCompra = medio_compra;
         rellenarTablaEntradas();
@@ -716,10 +716,10 @@ public class DialogCompra extends javax.swing.JDialog {
         String efectivoString = txtEfectivo.getText();
         try {
             double pago = Double.parseDouble(efectivoString);
-            if (pago < venta.getImporte_Total()) {
+            if (pago < venta.getImporte_total()) {
                 lblVuelto.setText("0");
             } else {
-                double vuelto = pago - venta.getImporte_Total();
+                double vuelto = pago - venta.getImporte_total();
                 lblVuelto.setText(Double.toString(vuelto));
             }
 
@@ -868,11 +868,11 @@ public class DialogCompra extends javax.swing.JDialog {
     }
 
     public void setearDetalleVenta(Venta venta) {
-        lblImporteTotal.setText(Double.toString(venta.getImporte_Total()));
-        lblCantEntradas.setText(Integer.toString(venta.getCantidad_Entradas()));
-        lblFechaVenta.setText(venta.getFecha_Venta().toString());
-        lblMedioPago.setText((String) venta.getMedio_Pago());
-        if (venta.getMedio_Compra().equalsIgnoreCase("online")) {
+        lblImporteTotal.setText(Double.toString(venta.getImporte_total()));
+        lblCantEntradas.setText(Integer.toString(venta.getCantidad_entradas()));
+        lblFechaVenta.setText(venta.getFecha_venta().toString());
+        lblMedioPago.setText((String) venta.getMedio_pago());
+        if (venta.getMedio_compra().equalsIgnoreCase("online")) {
             lblToken.setText(Integer.toString(token));
         } else {
             lblToken.setText("---------------");

@@ -226,6 +226,7 @@ public class VentaDAO {
         try (PreparedStatement ps = con.prepareStatement(sql)){
             ps.setInt(1, id);
             try(ResultSet rs = ps.executeQuery()){
+                if(rs.next()){
                 venta = new Venta();
                 venta.setId_venta(rs.getInt("id_venta"));
                     venta.setCliente(maniCliente.buscarClientePorId(rs.getInt("id_cliente")));
@@ -233,6 +234,7 @@ public class VentaDAO {
                     venta.setCantidad_entradas(rs.getInt("cantidad_entradas"));
                     venta.setImporte_total(rs.getDouble("importe_total"));
                     venta.setToken(rs.getInt("token"));
+                    }
             }
           }catch(SQLException e){
               throw new Exception("No se ha encontrado la venta asignada.");

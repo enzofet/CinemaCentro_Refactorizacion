@@ -585,16 +585,14 @@ public class TicketsInternal extends javax.swing.JInternalFrame {
             if (estadoAccion) {
                 int idFuncionCambiada = ventanaFuncion.getIdFuncion();
                 Funcion fun = maniFuncion.buscarFuncionPorId(idFuncionCambiada);
-                DialogAsientos ventanaAsientos = new DialogAsientos(padre, true, fun.getSala().getNro_Sala(), fun.getId_Funcion());
+                DialogAsientos ventanaAsientos = new DialogAsientos(padre, true, fun.getSala().getNro_Sala(), fun.getId_Funcion(), null);
                 ventanaAsientos.setVisible(true);
                 Asiento asientoNuevo = ventanaAsientos.getAsientoSeleccionado();
 
-                if (asientoNuevo != null) {
-                    Asiento asientoAntiguo = maniAsiento.buscarPorId(ticket.getId_asiento());
-                    maniAsiento.darAlta(asientoAntiguo.getId_asiento());
+                if (asientoNuevo != null) {  
                     DetalleTicket ticketCambiado = ticket;
-                    ticketCambiado.setId_asiento(asientoNuevo.getId_asiento());
-                    ticketCambiado.setId_funcion(fun.getId_Funcion());
+                    ticketCambiado.setAsiento(asientoNuevo.getAsiento());
+                    ticketCambiado.setFuncion(fun);
 
                     maniTickets.modificarTicket(idTicket, ticketCambiado);
                 } else {
@@ -861,8 +859,8 @@ public class TicketsInternal extends javax.swing.JInternalFrame {
                         if (tblTickets.getValueAt(filaS, 3).toString().equalsIgnoreCase("Pelicula o función eliminada.")) {
                             lblPelicula.setText("Pelicula: Eliminada la función o pelicula");
                         } else {
-                            Funcion fun = maniFuncion.buscarFuncionPorId(ticket.getId_funcion());
-                            lblSala.setText("Sala: " + Integer.toString(fun.getNro_Sala()));
+                            Funcion fun = maniFuncion.buscarFuncionPorId(ticket.getFuncion().getId_Funcion());
+                            lblSala.setText("Sala: " + Integer.toString(fun.getSala().getNro_Sala()));
                             lblPelicula.setText("Pelicula: " + (String) tblTickets.getValueAt(filaS, 3));
                             lblSubtitulada.setText("Subtitulada: " + parsearBooleanASINO(fun.isSubtitulada()));
                             lblFechaFuncion.setText("Fecha funcion: " + (String) tblTickets.getValueAt(filaS, 4));
