@@ -154,7 +154,7 @@ public class DetalleTicketDAO {
     }
 
     public void modificarTicket(int id_ticket, DetalleTicket ticket) throws Exception {
-        String sql = "UPDATE detalleticket SET id_funcion = ?, id_asiento = ?, id_venta = ? WHERE id_ticket = ?";
+        String sql = "UPDATE detalleticket SET id_funcion = ?, asiento = ?, id_venta = ? WHERE id_ticket = ?";
         Connection con = ConexionBD.getConnection();
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -250,13 +250,12 @@ public class DetalleTicketDAO {
 
     public List<TicketDato> listarDatosTickets() throws Exception {
         String sql = "SELECT dt.id_ticket id_ticket, p.titulo tituloPelicula, s.nro_sala nroSala, f.fecha_funcion fechaFuncion, "
-                + "f.hora_inicio horaInicio, f.hora_fin horaFin, a.numero_asiento numeroAsiento, a.fila_asiento filaAsiento, "
+                + "f.hora_inicio horaInicio, f.hora_fin horaFin, dt.asiento asiento, "
                 + "c.dni DNI, c.nombre nombre, c.apellido apellido, v.medio_compra medioCompra, dt.fecha_emision fechaEmision, "
                 + "dt.estado estado FROM detalleticket dt\n"
                 + "LEFT JOIN funcion f ON dt.id_funcion = f.id_funcion\n"
                 + "LEFT JOIN pelicula p ON f.id_pelicula = p.id_pelicula\n"
                 + "LEFT JOIN sala s ON f.nro_sala = s.nro_sala\n"
-                + "LEFT JOIN asiento a ON a.id_asiento = dt.id_asiento\n"
                 + "LEFT JOIN venta v ON dt.id_venta = v.id_venta\n"
                 + "LEFT JOIN cliente c ON v.id_cliente = c.id_cliente WHERE 1=1\n"
                 + "ORDER BY dt.fecha_emision";
@@ -278,7 +277,7 @@ public class DetalleTicketDAO {
                         datoTicket.setFechaFuncion(rs.getString("fechaFuncion"));
                         datoTicket.setHoraInicio(rs.getString("horaInicio"));
                         datoTicket.setHoraFin(rs.getString("horaFin"));
-                        datoTicket.setAsiento(rs.getString("numeroAsiento") + " - " + rs.getString("filaAsiento"));
+                        datoTicket.setAsiento(rs.getString("asiento"));
                     } else {
                         datoTicket.setPeliculaTitulo("Pelicula o función eliminada.");
                         datoTicket.setNroSala(0);
