@@ -28,7 +28,7 @@ public class DetalleTicketDAO {
     
 
     public void generarTicket(DetalleTicket ticket) throws Exception {
-        String sql = "INSERT INTO detalleticket(id_funcion, id_asiento, id_venta, fecha_emision, estado)"
+        String sql = "INSERT INTO detalleticket(id_funcion, asiento, id_venta, fecha_emision, estado)"
                 + " VALUES (?, ?, ?, ?, ?)";
 
         Connection con = ConexionBD.getConnection();

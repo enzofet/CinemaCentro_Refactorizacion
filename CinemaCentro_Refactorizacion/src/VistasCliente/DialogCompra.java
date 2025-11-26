@@ -70,7 +70,7 @@ public class DialogCompra extends javax.swing.JDialog {
         this.listaAsientos = listaAsientos;
         this.venta = venta;
         this.token = maniTicket.generarToken();
-
+        venta.setMedio_compra(medio_compra);
         //cambio Ema
         this.venta.setToken(this.token);
 
@@ -765,7 +765,7 @@ public class DialogCompra extends javax.swing.JDialog {
                         // se inserta como null en la bd
                     }
                     int idVenta = maniVenta.registrarVentaOnline(venta);
-
+                    venta.setId_venta(idVenta);
                     for (Asiento asiento : listaAsientos) {
                         DetalleTicket ticket = new DetalleTicket(
                                 funcion,
