@@ -17,8 +17,6 @@ import VistasAdministrativo.DialogAsientos;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -533,7 +531,6 @@ public class VentanaMainCliente extends javax.swing.JFrame {
     private void jBComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBComprarActionPerformed
         // TODO add your handling code here:
 
-        int id_cliente = cliente.getId_cliente();
         Venta ventaOnline = new Venta();
         ventaOnline.setCliente(cliente);
         ventaOnline.setMedio_pago("debito");
