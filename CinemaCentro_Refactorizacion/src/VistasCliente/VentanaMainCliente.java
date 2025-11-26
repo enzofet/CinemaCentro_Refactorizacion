@@ -106,7 +106,7 @@ public class VentanaMainCliente extends javax.swing.JFrame {
                     fun.getId_Funcion(),
                     fun.getFecha_Funcion(),
                     "Inicio: " + fun.getHora_Inicio() + " / Fin: " + fun.getHora_Fin(),
-                    fun.getSala(),
+                    fun.getSala().getNro_Sala(),
                     parsearBooleann(fun.isEs3D()),
                     fun.getIdioma(),
                     parsearBooleann(fun.isSubtitulada()),
