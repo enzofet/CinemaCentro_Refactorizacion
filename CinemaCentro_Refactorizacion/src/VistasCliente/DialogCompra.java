@@ -5,7 +5,6 @@
  */
 package VistasCliente;
 
-
 import Controlador.ClienteDAO;
 import Controlador.DetalleTicketDAO;
 import Controlador.FuncionDAO;
@@ -769,9 +768,9 @@ public class DialogCompra extends javax.swing.JDialog {
 
                     for (Asiento asiento : listaAsientos) {
                         DetalleTicket ticket = new DetalleTicket(
-                                funcion.getId_Funcion(),
+                                funcion,
                                 asiento.getAsiento(),
-                                idVenta,
+                                venta,
                                 LocalDate.now(),
                                 true
                         );
@@ -800,21 +799,13 @@ public class DialogCompra extends javax.swing.JDialog {
     }//GEN-LAST:event_btnConfirmarCompraActionPerformed
 
     private void btnCancelarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarCompraActionPerformed
-        try {
-            if (listaAsientos != null && !listaAsientos.isEmpty()) {
-                AsientoDAO asientoDAO = new AsientoDAO();
-                asientoDAO.liberarAsientos(listaAsientos);
-
-                JOptionPane.showMessageDialog(this,
-                        "Compra cancelada. " + listaAsientos.size() + " asiento(s) han sido liberados.",
-                        "Compra Cancelada",
-                        JOptionPane.INFORMATION_MESSAGE);
-            }
-        } catch (Exception e) {
+//Consultar con enzo
+        if (listaAsientos != null && !listaAsientos.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                    "Error al liberar los asientos: " + e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                    "Compra cancelada. " + listaAsientos.size() + " asiento(s) han sido liberados.",
+                    "Compra Cancelada",
+                    JOptionPane.INFORMATION_MESSAGE);
+            listaAsientos.clear();
         }
 
         estado = false;
@@ -888,8 +879,7 @@ public class DialogCompra extends javax.swing.JDialog {
         modelo.addColumn("Numero asiento");
         for (Asiento a : listaAsientos) {
             modelo.addRow(new Object[]{
-                a.getFila_asiento(),
-                a.getNumero_asiento()
+                a.getAsiento()
             });
         }
         tblEntradas.setModel(modelo);
@@ -907,13 +897,13 @@ public class DialogCompra extends javax.swing.JDialog {
                 if (filaS != -1) {
                     lblAsiento.setText(tblEntradas.getValueAt(filaS, 0) + " - " + tblEntradas.getValueAt(filaS, 1));
                     lblPelicula.setText(peli.getTitulo());
-                    lblNumeroSala.setText(Integer.toString(funcion.getNro_Sala()));
+                    lblNumeroSala.setText(Integer.toString(funcion.getSala().getNro_Sala()));
                     lblSubtitulada.setText(parsearBoolean(funcion.isSubtitulada()));
                     lbl3D.setText(parsearBoolean(funcion.isEs3D()));
                     lblFechaFuncion.setText(funcion.getFecha_Funcion().toString());
                     lblPrecioEntrada.setText(Double.toString(funcion.getPrecio_Entrada()));
                     lblHorario.setText(funcion.getHora_Inicio().toString().substring(0, 5) + " - " + funcion.getHora_Fin().toString().substring(0, 5));
-                    lblFechaEmision.setText(venta.getFecha_Venta().toString());
+                    lblFechaEmision.setText(venta.getFecha_venta().toString());
                     lblIdioma.setText(funcion.getIdioma().toString());
 
                 }
@@ -929,7 +919,7 @@ public class DialogCompra extends javax.swing.JDialog {
         int idVenta = maniVenta.registrarVentaTaquilla(venta);
 
         for (Asiento asiento : listaAsientos) {
-            DetalleTicket ticket = new DetalleTicket(funcion.getId_Funcion(), asiento.getId_asiento(), idVenta, LocalDate.now(), true);
+            DetalleTicket ticket = new DetalleTicket(funcion, asiento.getAsiento(), venta, LocalDate.now(), true);
             maniTicket.generarTicket(ticket);
         }
         estado = true;
@@ -954,9 +944,8 @@ public class DialogCompra extends javax.swing.JDialog {
 
                 int dni = Integer.parseInt(txtdni);
                 cliente = maniCliente.buscarClientePorDNI(dni);
-                id_cliente = cliente.getId_cliente();
-                venta.setId_Cliente(id_cliente);
-                System.out.println(cliente.getId_cliente() + id_cliente + venta.getId_Cliente());
+                venta.setCliente(cliente);
+                System.out.println(cliente.getId_cliente());
                 if (cliente != null) {
                     ventayticketTaquilla();
                     JOptionPane.showMessageDialog(this, "Venta y tickets generados correctamente.");
