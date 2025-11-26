@@ -5,7 +5,7 @@
  */
 package VistasCliente;
 
-import Controlador.AsientoDAO;
+
 import Controlador.FuncionDAO;
 import Controlador.PeliculaDAO;
 import Modelo.Asiento;
@@ -40,7 +40,6 @@ public class VentanaMainCliente extends javax.swing.JFrame {
     double precioEntrada = 0;
     boolean estadoExito;
     ArrayList<Asiento> listaAsi = new ArrayList<>();
-    AsientoDAO maniAsi = new AsientoDAO();
     DefaultListModel<String> modeloAsi = new DefaultListModel<>();
 
     int idFun = 0;
