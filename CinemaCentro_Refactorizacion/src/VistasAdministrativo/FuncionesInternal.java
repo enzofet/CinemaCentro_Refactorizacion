@@ -6,6 +6,7 @@ import Controlador.SalaDAO;
 import Modelo.Funcion;
 import Modelo.Pelicula;
 import Modelo.Sala;
+import java.awt.Color;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -30,6 +31,7 @@ public class FuncionesInternal extends javax.swing.JInternalFrame {
 
     public FuncionesInternal() {
         initComponents();
+        configurarColoresTablas();
         cargarTablaPeliculas();
         cargarSalas();
         configurarTablaDescripcion();
@@ -50,6 +52,10 @@ public class FuncionesInternal extends javax.swing.JInternalFrame {
                 try {
                     peliculaSeleccionada = tblPeliculas.getValueAt(fila, 1).toString();
                     idPeliculaSeleccionada = Integer.parseInt(tblPeliculas.getValueAt(fila, 0).toString());
+
+                    tblDescripcion.clearSelection();
+                    limpiarSeleccionFuncion();
+                    actualizarEstadoBotones();
                 } catch (NumberFormatException ex) {
                     idPeliculaSeleccionada = -1;
                 }
@@ -60,6 +66,10 @@ public class FuncionesInternal extends javax.swing.JInternalFrame {
             if (!e.getValueIsAdjusting() && tblSala.getSelectedRow() != -1) {
                 int fila = tblSala.getSelectedRow();
                 salaSeleccionada = tblSala.getValueAt(fila, 0).toString();
+
+                tblDescripcion.clearSelection();
+                limpiarSeleccionFuncion();
+                actualizarEstadoBotones();
             }
         });
     }
@@ -409,6 +419,13 @@ public class FuncionesInternal extends javax.swing.JInternalFrame {
                         btndarAlta.setEnabled(true);
                         btndarbaja.setEnabled(true);
                         btnAgregar.setEnabled(false);
+
+                        tblPeliculas.clearSelection();
+                        tblSala.clearSelection();
+                        peliculaSeleccionada = null;
+                        salaSeleccionada = null;
+                        idPeliculaSeleccionada = -1;
+
                     } else {
                         JOptionPane.showMessageDialog(this, "No se pudo cargar la función seleccionada.");
                     }
@@ -441,6 +458,42 @@ public class FuncionesInternal extends javax.swing.JInternalFrame {
     private javax.swing.JTable tblPeliculas;
     private javax.swing.JTable tblSala;
     // End of variables declaration//GEN-END:variables
+
+    private void configurarColoresTablas() {
+        // color verde para peliculas y salas
+        Color colorCrear = new Color(46, 125, 50); 
+        tblPeliculas.setSelectionBackground(colorCrear);
+        tblPeliculas.setSelectionForeground(Color.WHITE);
+
+        tblSala.setSelectionBackground(colorCrear);
+        tblSala.setSelectionForeground(Color.WHITE);
+
+        //color azul para descripcion
+        Color colorModificar = new Color(25, 118, 210);
+        tblDescripcion.setSelectionBackground(colorModificar);
+        tblDescripcion.setSelectionForeground(Color.WHITE);
+
+        // esto hace que se vea más bonito segun yt asjsajas
+        tblPeliculas.setGridColor(new Color(200, 200, 200));
+        tblSala.setGridColor(new Color(200, 200, 200));
+        tblDescripcion.setGridColor(new Color(200, 200, 200));
+
+        // hacer un poco más alta la seleccion
+        tblPeliculas.setRowHeight(25);
+        tblSala.setRowHeight(25);
+        tblDescripcion.setRowHeight(25);
+    }
+
+    private void actualizarEstadoBotones() {
+        boolean tienePeliculaYSala = (peliculaSeleccionada != null && salaSeleccionada != null);
+        boolean tieneFuncionSeleccionada = (funcionSeleccionada != null);
+
+        btnAgregar.setEnabled(tienePeliculaYSala && !tieneFuncionSeleccionada);
+        btnmodificar.setEnabled(tieneFuncionSeleccionada);
+        btneliminar.setEnabled(tieneFuncionSeleccionada);
+        btndarAlta.setEnabled(tieneFuncionSeleccionada);
+        btndarbaja.setEnabled(tieneFuncionSeleccionada);
+    }
 
     private void abrirDialogoNuevaFuncion() {
         if (peliculaSeleccionada == null || idPeliculaSeleccionada == -1) {
@@ -614,7 +667,7 @@ public class FuncionesInternal extends javax.swing.JInternalFrame {
             tblPeliculas.getColumnModel().getColumn(0).setPreferredWidth(0);
         }
     }
-    
+
     private void limpiarSeleccionFuncion() {
         funcionSeleccionada = null;
         btnmodificar.setEnabled(false);
