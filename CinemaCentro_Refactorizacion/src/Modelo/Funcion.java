@@ -26,13 +26,12 @@ public class Funcion {
     private LocalDate Fecha_Funcion;
     private boolean Subtitulada;
     private boolean Estado;
-    private String descripcion;
 
     public Funcion() {
         this.id_Funcion = -1;
     }
 
-    public Funcion(int id_Funcion, Pelicula pelicula, Sala sala, String idioma, boolean es3D, Time Hora_Inicio, Time Hora_Fin, double Precio_Entrada, LocalDate Fecha_Funcion, boolean Subtitulada, boolean Estado, String descripcion) {
+    public Funcion(int id_Funcion, Pelicula pelicula, Sala sala, String idioma, boolean es3D, Time Hora_Inicio, Time Hora_Fin, double Precio_Entrada, LocalDate Fecha_Funcion, boolean Subtitulada, boolean Estado) {
         this.id_Funcion = id_Funcion;
         this.pelicula = pelicula;
         this.sala = sala;
@@ -44,7 +43,7 @@ public class Funcion {
         this.Fecha_Funcion = Fecha_Funcion;
         this.Subtitulada = Subtitulada;
         this.Estado = Estado;
-        this.descripcion = descripcion;
+        //aca borré lo de descripcion que estaba al pedo.
     }
 
     public Funcion(Pelicula pelicula, Sala sala, String idioma, boolean es3D, Time Hora_Inicio, Time Hora_Fin, double Precio_Entrada, LocalDate Fecha_Funcion, boolean Subtitulada, boolean Estado, String descripcion) {
@@ -58,7 +57,6 @@ public class Funcion {
         this.Fecha_Funcion = Fecha_Funcion;
         this.Subtitulada = Subtitulada;
         this.Estado = Estado;
-        this.descripcion = descripcion;
     }
 
     public int getId_Funcion() {
@@ -149,16 +147,6 @@ public class Funcion {
         this.Estado = Estado;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    
-
     @Override
     public int hashCode() {
         return Objects.hashCode(this.id_Funcion);
@@ -178,7 +166,6 @@ public class Funcion {
 
     @Override
     public String toString() {
-        return "Funcion{" + "id_Funcion=" + id_Funcion + ", id_pelicula=" + pelicula + ", nro_Sala=" + sala + ", idioma=" + idioma + ", es3D=" + es3D + ", Hora_Inicio=" + Hora_Inicio + ", Hora_Fin=" + Hora_Fin + ", Precio_Entrada=" + Precio_Entrada + ", Fecha_Funcion=" + Fecha_Funcion + ", Subtitulada=" + Subtitulada + ", Estado=" + Estado +  ", descripcion=" + descripcion + '}';
+        return "Funcion{" + "id_Funcion=" + id_Funcion + ", id_pelicula=" + pelicula + ", nro_Sala=" + sala + ", idioma=" + idioma + ", es3D=" + es3D + ", Hora_Inicio=" + Hora_Inicio + ", Hora_Fin=" + Hora_Fin + ", Precio_Entrada=" + Precio_Entrada + ", Fecha_Funcion=" + Fecha_Funcion + ", Subtitulada=" + Subtitulada + ", Estado=" + Estado + '}';
     }
-
 }
