@@ -372,7 +372,9 @@ public class DialogAsientos extends javax.swing.JDialog {
         try {
             Set<String> asientosOcup = new HashSet<>();
             for (DetalleTicket dt : listaT) {
-                asientosOcup.add(dt.getAsiento());
+                if(dt.isEstado()==true){
+                    asientosOcup.add(dt.getAsiento());
+                } 
             }
             for(Asiento a : seleccionados){
                 asientosOcup.add(a.getAsiento());

@@ -31,8 +31,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -764,7 +762,7 @@ public class DialogCompra extends javax.swing.JDialog {
 
             if (medioCompra.equalsIgnoreCase("online")) {
                 try {
-                    if (venta.getId_Cliente() == -1) {
+                    if (venta.getCliente().getId_cliente() == -1) {
                         // se inserta como null en la bd
                     }
                     int idVenta = maniVenta.registrarVentaOnline(venta);
@@ -772,7 +770,7 @@ public class DialogCompra extends javax.swing.JDialog {
                     for (Asiento asiento : listaAsientos) {
                         DetalleTicket ticket = new DetalleTicket(
                                 funcion.getId_Funcion(),
-                                asiento.getId_asiento(),
+                                asiento.getAsiento(),
                                 idVenta,
                                 LocalDate.now(),
                                 true
