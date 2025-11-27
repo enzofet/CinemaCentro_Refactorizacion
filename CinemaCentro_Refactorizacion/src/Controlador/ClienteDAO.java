@@ -121,6 +121,7 @@ public class ClienteDAO {
         Connection conn = ConexionBD.getConnection();
         
         Cliente cliente = null;
+        
         try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, dni);
             try(ResultSet rs = ps.executeQuery()){
@@ -133,8 +134,6 @@ public class ClienteDAO {
                     cliente.setApellido(rs.getString("apellido"));
                     cliente.setEstado(rs.getBoolean("estado"));
                     cliente.setPassword(rs.getString("password"));
-                } else {
-                    throw new Exception("No se ha encontrado el cliente.");
                 }
             }
         }catch(SQLException e){
