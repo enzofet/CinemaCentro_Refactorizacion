@@ -20,6 +20,7 @@ public class Venta {
     public Venta() {
         this.id_venta=-1;
         this.token = null;
+        
     }
 
     public Venta(int id_venta, Cliente cliente, String medio_pago, int cantidad_entradas, double importe_total, String medio_compra, LocalDate fecha_venta) {

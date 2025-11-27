@@ -104,9 +104,7 @@ public class ClienteDAO {
                     cliente.setApellido(rs.getString("apellido"));
                     cliente.setEstado(rs.getBoolean("estado"));
                     cliente.setPassword(rs.getString("password"));
-                } else {
-                    throw new Exception("No se ha encontrado el cliente.");
-                }
+                } 
             }
         }catch(SQLException e){
             e.printStackTrace();

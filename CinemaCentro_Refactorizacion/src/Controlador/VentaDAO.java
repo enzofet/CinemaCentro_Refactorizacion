@@ -33,7 +33,7 @@ public class VentaDAO {
         Connection con = ConexionBD.getConnection();
         int idVenta = -1;
         try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            if (venta.getCliente().getId_cliente() == -1) {
+            if (venta.getCliente() == null) {
                 ps.setNull(1, Types.INTEGER);
             } else {
                 ps.setInt(1, venta.getCliente().getId_cliente());
