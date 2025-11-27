@@ -375,7 +375,7 @@ public class FuncionesInternal extends javax.swing.JInternalFrame {
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al eliminar función: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al eliminar función, esta funcion tiene tickets relacionados.");
         }
     }//GEN-LAST:event_btneliminarActionPerformed
 
