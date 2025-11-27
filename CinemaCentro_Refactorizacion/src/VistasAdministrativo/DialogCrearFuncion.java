@@ -47,8 +47,40 @@ public class DialogCrearFuncion extends javax.swing.JDialog {
         this.modoEdicion = true;
         initComponents();
         configurarDialogo();
+        validarCompatibilidad3D();
         cargarDatosFuncion();
         setLocationRelativeTo(parent);
+    }
+
+    private void validarCompatibilidad3D() {
+        try {
+            boolean salaEsApta3D = salaDAO.salaEsApta3D(nroSalaSeleccionada);
+
+            if (!salaEsApta3D) {
+                // si la sala no es apta para 3D, fuerza el 2D y deshabilita la opción 3D
+                rbtn2D.setSelected(true);
+                rbtn3D.setEnabled(false);
+
+                // muestra mensaje de advertencia
+                rbtn3D.setToolTipText("Esta sala no es apta para proyecciones 3D");
+                if (modoEdicion && funcionSeleccionada != null && funcionSeleccionada.isEs3D()) {
+                    JOptionPane.showMessageDialog(this,
+                            "⚠️ ADVERTENCIA: Esta sala no es apta para 3D.\n"
+                            + "La función será convertida a 2D automáticamente.",
+                            "Sala no compatible con 3D",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            } else {
+                // si la sala si es apta para 3D, habilitar ambas opciones
+                rbtn3D.setEnabled(true);
+                rbtn3D.setToolTipText("Proyección en 3D disponible");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al verificar compatibilidad 3D: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void configurarDialogo() {
@@ -199,6 +231,20 @@ public class DialogCrearFuncion extends javax.swing.JDialog {
             }
 
             boolean es3D = tipo.equals("3D");
+            boolean salaEsApta3D = salaDAO.salaEsApta3D(nroSalaSeleccionada);
+
+            if (es3D && !salaEsApta3D) {
+                JOptionPane.showMessageDialog(this,
+                        "❌ NO SE PUEDE CREAR FUNCIÓN 3D\n\n"
+                        + "La sala " + nroSalaSeleccionada + " no es apta para proyecciones 3D.\n"
+                        + "Por favor, seleccione:\n"
+                        + "• Otra sala que soporte 3D, o\n"
+                        + "• Cambie el tipo a 2D",
+                        "Sala no compatible con 3D",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             boolean subtitulada = !subtituladaStr.equals("No");
 
             // ✅ validacion para el conflicto de los horarios
@@ -307,6 +353,8 @@ public class DialogCrearFuncion extends javax.swing.JDialog {
         this.salaSeleccionada = sala;
         this.nroSalaSeleccionada = nroSala;
         lblSalaSeleccionada.setText("Sala: " + sala);
+        
+        validarCompatibilidad3D();
     }
 
     /**

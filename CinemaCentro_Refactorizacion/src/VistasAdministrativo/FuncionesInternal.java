@@ -574,7 +574,7 @@ public class FuncionesInternal extends javax.swing.JInternalFrame {
                     s.getNro_Sala(),
                     s.getCapacidad(),
                     parsearBoolean(s.isEstado()),
-                    parsearBoolean(s.isApta3D())
+                    s.isApta3D() ? "Si" : "No"
                 });
             }
             tblSala.setModel(modelo);
