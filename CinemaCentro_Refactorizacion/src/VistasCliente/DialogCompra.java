@@ -920,6 +920,7 @@ public class DialogCompra extends javax.swing.JDialog {
 
         int idVenta = maniVenta.registrarVentaTaquilla(venta);
         Venta ventaBuscada = maniVenta.buscarPorId(idVenta);
+        venta.setId_venta(idVenta);
 
         for (Asiento asiento : listaAsientos) {
             DetalleTicket ticket = new DetalleTicket(funcion, asiento.getAsiento(), venta, LocalDate.now(), true);
@@ -930,6 +931,7 @@ public class DialogCompra extends javax.swing.JDialog {
     }
 
     private boolean registrarVentaTaquilla() {
+
         int sel = JOptionPane.showConfirmDialog(
                 this,
                 "¿Es cliente?",
@@ -943,7 +945,7 @@ public class DialogCompra extends javax.swing.JDialog {
                 String txtdni = JOptionPane.showInputDialog("Ingrese DNI");
 
                 if (txtdni == null) {
-                    return false;  // cancela
+                    return false;
                 }
 
                 txtdni = txtdni.trim();
@@ -959,15 +961,40 @@ public class DialogCompra extends javax.swing.JDialog {
                 cliente = maniCliente.buscarClientePorDNI(dni);
 
                 if (cliente == null) {
-                    JOptionPane.showMessageDialog(this, "No existe un cliente con ese DNI.");
-                    return false;
+
+                    int crear = JOptionPane.showConfirmDialog(
+                            this,
+                            "No existe un cliente con ese DNI. ¿Desea crear una cuenta ahora?",
+                            "",
+                            JOptionPane.YES_NO_OPTION
+                    );
+
+                    if (crear == JOptionPane.YES_OPTION) {
+
+                        JFrame padre = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+                        DialogAgregarCliente ventanaAgregarCliente
+                                = new DialogAgregarCliente(padre, true, true, venta);
+
+                        ventanaAgregarCliente.setVisible(true);
+
+                        ventayticketTaquilla();
+                        JOptionPane.showMessageDialog(this,
+                                "Venta registrada y asociada al cliente correctamente.");
+
+                    } else {
+                        ventayticketTaquilla();
+                        JOptionPane.showMessageDialog(this,
+                                "Venta registrada correctamente.");
+                    }
+
+                    return true;
                 }
-
                 venta.setCliente(cliente);
+                ventayticketTaquilla();
 
-                ventayticketTaquilla(); // ← registra venta y tickets
-
-                JOptionPane.showMessageDialog(this, "Venta y tickets generados correctamente.");
+                JOptionPane.showMessageDialog(this,
+                        "Venta y tickets generados correctamente.");
                 return true;
             }
             int selec = JOptionPane.showConfirmDialog(
@@ -985,13 +1012,12 @@ public class DialogCompra extends javax.swing.JDialog {
                         = new DialogAgregarCliente(padre, true, true, venta);
 
                 ventanaAgregarCliente.setVisible(true);
-            }
-            ventayticketTaquilla();
 
-            if (selec == JOptionPane.YES_OPTION) {
+                ventayticketTaquilla();
                 JOptionPane.showMessageDialog(this,
                         "Venta registrada y asociada al cliente correctamente.");
             } else {
+                ventayticketTaquilla();
                 JOptionPane.showMessageDialog(this,
                         "Venta registrada correctamente.");
             }
@@ -1000,8 +1026,9 @@ public class DialogCompra extends javax.swing.JDialog {
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-            return false;
         }
+
+        return false;
     }
 
     private void placeholderFecha() {
