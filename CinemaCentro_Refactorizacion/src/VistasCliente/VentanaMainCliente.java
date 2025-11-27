@@ -5,7 +5,6 @@
  */
 package VistasCliente;
 
-
 import Controlador.FuncionDAO;
 import Controlador.PeliculaDAO;
 import Modelo.Asiento;
@@ -15,6 +14,9 @@ import Modelo.Pelicula;
 import Modelo.Venta;
 import VistasAdministrativo.DialogAsientos;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
@@ -73,13 +75,15 @@ public class VentanaMainCliente extends javax.swing.JFrame {
         try {
             lista = maniPeli.listarTodasPeliculas();
             for (Pelicula peli : lista) {
-                modeloPeli.addRow(new Object[]{
-                    peli.getId_Pelicula(),
-                    peli.getTitulo(),
-                    peli.getDirector(),
-                    peli.getReparto(),
-                    peli.getGenero()
-                });
+                if (peli.isEnCartelera()) {
+                    modeloPeli.addRow(new Object[]{
+                        peli.getId_Pelicula(),
+                        peli.getTitulo(),
+                        peli.getDirector(),
+                        peli.getReparto(),
+                        peli.getGenero()
+                    });
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,22 +98,38 @@ public class VentanaMainCliente extends javax.swing.JFrame {
     }
 
     private void tablaFun() {
+        
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         ArrayList<Funcion> listaFun;
         modeloFun.setRowCount(0);
+        LocalDate hoy = LocalDate.now();
+        LocalDateTime ahora = LocalDateTime.now();
+
+        LocalDate fechaFun;
+        LocalTime horaFun;
+        LocalDateTime inicioFuncion;
+        LocalDateTime limiteCompra;
+
         try {
             listaFun = maniFun.listadoPorId(idPeli);
             for (Funcion fun : listaFun) {
-                modeloFun.addRow(new Object[]{
-                    fun.getId_Funcion(),
-                    fun.getFecha_Funcion(),
-                    "Inicio: " + fun.getHora_Inicio() + " / Fin: " + fun.getHora_Fin(),
-                    fun.getSala().getNro_Sala(),
-                    parsearBooleann(fun.isEs3D()),
-                    fun.getIdioma(),
-                    parsearBooleann(fun.isSubtitulada()),
-                    fun.getPrecio_Entrada()
-                });
+                fechaFun = fun.getFecha_Funcion();
+                horaFun = (fun.getHora_Inicio()).toLocalTime();
+                inicioFuncion = LocalDateTime.of(fechaFun, horaFun);
+                limiteCompra = inicioFuncion.minusMinutes(10);
+                if (!(fechaFun.isBefore(hoy)) && !(ahora.isAfter(limiteCompra))) {
+                    modeloFun.addRow(new Object[]{
+                        fun.getId_Funcion(),
+                        fechaFun.format(dtf),
+                        "Inicio: " + fun.getHora_Inicio() + " / Fin: " + fun.getHora_Fin(),
+                        fun.getSala().getNro_Sala(),
+                        parsearBooleann(fun.isEs3D()),
+                        fun.getIdioma(),
+                        parsearBooleann(fun.isSubtitulada()),
+                        fun.getPrecio_Entrada()
+                    });
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -526,6 +546,7 @@ public class VentanaMainCliente extends javax.swing.JFrame {
         jBCancelarB.setEnabled(false);
         jBComprar.setEnabled(false);
         jListAsientos.setOpaque(false);
+        jTFuncion.clearSelection();
     }//GEN-LAST:event_jBCancelarBActionPerformed
 
     private void jBComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBComprarActionPerformed
@@ -553,7 +574,7 @@ public class VentanaMainCliente extends javax.swing.JFrame {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();            
+            ex.printStackTrace();
         }
         limpiarCampos();
     }//GEN-LAST:event_jBComprarActionPerformed
