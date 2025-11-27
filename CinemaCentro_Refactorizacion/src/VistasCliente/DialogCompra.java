@@ -785,14 +785,16 @@ public class DialogCompra extends javax.swing.JDialog {
                     e.printStackTrace();
                 }
             } else if (medioCompra.equalsIgnoreCase("taquilla")) {
-                registrarVentaTaquilla();
-                this.dispose();
+                if (registrarVentaTaquilla()) {
+                    this.dispose();
+                }
             }
         }
         if (medioPago.equalsIgnoreCase("efectivo")) {
 
-            registrarVentaTaquilla();
-            this.dispose();
+            if (registrarVentaTaquilla()) {
+                this.dispose();
+            }
         }
 
 
@@ -917,63 +919,88 @@ public class DialogCompra extends javax.swing.JDialog {
         venta.setToken(null);
 
         int idVenta = maniVenta.registrarVentaTaquilla(venta);
+        Venta ventaBuscada = maniVenta.buscarPorId(idVenta);
 
         for (Asiento asiento : listaAsientos) {
             DetalleTicket ticket = new DetalleTicket(funcion, asiento.getAsiento(), venta, LocalDate.now(), true);
             maniTicket.generarTicket(ticket);
         }
+
         estado = true;
     }
 
-    private void registrarVentaTaquilla() {
-        int sel = JOptionPane.showConfirmDialog(this,
+    private boolean registrarVentaTaquilla() {
+        int sel = JOptionPane.showConfirmDialog(
+                this,
                 "¿Es cliente?",
                 "",
-                YES_NO_OPTION);
-        try {
-            if (sel == 0) {
-                String txtdni = JOptionPane.showInputDialog("Ingrese DNI");
-                System.out.println("......");
+                JOptionPane.YES_NO_OPTION
+        );
 
-                if (!txtdni.matches("\\d{8}") || txtdni == null) {
-                    JOptionPane.showMessageDialog(this,
-                            "Debe ingresar un DNI válido de 8 dígitos sin puntos ni espacios.");
-                    return;
+        try {
+            if (sel == JOptionPane.YES_OPTION) {
+
+                String txtdni = JOptionPane.showInputDialog("Ingrese DNI");
+
+                if (txtdni == null) {
+                    return false;  // cancela
                 }
+
                 txtdni = txtdni.trim();
 
+                if (!txtdni.matches("\\d{8}")) {
+                    JOptionPane.showMessageDialog(this,
+                            "Debe ingresar un DNI válido de 8 dígitos sin puntos ni espacios.");
+                    return false;
+                }
+
                 int dni = Integer.parseInt(txtdni);
+
                 cliente = maniCliente.buscarClientePorDNI(dni);
+
+                if (cliente == null) {
+                    JOptionPane.showMessageDialog(this, "No existe un cliente con ese DNI.");
+                    return false;
+                }
+
                 venta.setCliente(cliente);
-                System.out.println(cliente.getId_cliente());
-                if (cliente != null) {
-                    ventayticketTaquilla();
-                    JOptionPane.showMessageDialog(this, "Venta y tickets generados correctamente.");
-                    return;
-                }
 
-            } else if (sel == 1 || cliente == null) {
-                int selec = JOptionPane.showConfirmDialog(this,
-                        "¿Desea crear una cuenta ahora?.",
-                        "",
-                        YES_NO_OPTION);
+                ventayticketTaquilla(); // ← registra venta y tickets
 
-                if (selec == 0) {
-                    JFrame padre = (JFrame) SwingUtilities.getWindowAncestor(this);
-                    DialogAgregarCliente ventanaAgregarCliente = new DialogAgregarCliente(padre, true, true, venta);
-                    ventanaAgregarCliente.setVisible(true);
-
-                    ventayticketTaquilla();
-                    JOptionPane.showMessageDialog(this, "Venta registrada y asociada al cliente correctamente.");
-
-                } else {
-                    ventayticketTaquilla();
-                    JOptionPane.showMessageDialog(this, "Venta registrada correctamente.");
-                }
+                JOptionPane.showMessageDialog(this, "Venta y tickets generados correctamente.");
+                return true;
             }
+            int selec = JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Desea crear una cuenta ahora?",
+                    "",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (selec == JOptionPane.YES_OPTION) {
+
+                JFrame padre = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+                DialogAgregarCliente ventanaAgregarCliente
+                        = new DialogAgregarCliente(padre, true, true, venta);
+
+                ventanaAgregarCliente.setVisible(true);
+            }
+            ventayticketTaquilla();
+
+            if (selec == JOptionPane.YES_OPTION) {
+                JOptionPane.showMessageDialog(this,
+                        "Venta registrada y asociada al cliente correctamente.");
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Venta registrada correctamente.");
+            }
+
+            return true;
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
+            return false;
         }
     }
 
