@@ -877,8 +877,7 @@ public class DialogCompra extends javax.swing.JDialog {
                 return false;
             }
         };
-        modelo.addColumn("Fila asiento");
-        modelo.addColumn("Numero asiento");
+        modelo.addColumn("Asiento(s)");
         for (Asiento a : listaAsientos) {
             modelo.addRow(new Object[]{
                 a.getAsiento()
@@ -897,7 +896,7 @@ public class DialogCompra extends javax.swing.JDialog {
 
                 int filaS = tblEntradas.getSelectedRow();
                 if (filaS != -1) {
-                    lblAsiento.setText(tblEntradas.getValueAt(filaS, 0) + " - " + tblEntradas.getValueAt(filaS, 1));
+                    lblAsiento.setText((String)tblEntradas.getValueAt(filaS, 0));
                     lblPelicula.setText(peli.getTitulo());
                     lblNumeroSala.setText(Integer.toString(funcion.getSala().getNro_Sala()));
                     lblSubtitulada.setText(parsearBoolean(funcion.isSubtitulada()));
