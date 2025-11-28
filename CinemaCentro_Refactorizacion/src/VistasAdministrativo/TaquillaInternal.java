@@ -806,6 +806,7 @@ public class TaquillaInternal extends javax.swing.JInternalFrame {
         modeloLista.clear();
         listAsientosS.setModel(modeloLista);
         rellenarTablaFunciones(id_peliculaS);
+        tblCartelera.clearSelection();
 
     }
 
